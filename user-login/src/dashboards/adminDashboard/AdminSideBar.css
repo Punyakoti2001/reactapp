@@ -1,0 +1,12 @@
+.text-hover.active {
+    background-color:white;
+  }
+
+.NavBar:hover
+{
+  color: gray;
+}
+
+.cont-rad {
+  border-radius: 30px 10px 10px 30px; /* Top-left, Top-right, Bottom-right, Bottom-left */
+}
