@@ -1,0 +1,8 @@
+List<String> list = List.of("ppk","bharath","jagadheesh","reddy");
+
+// Filter the list to keep elements at even indices (0-based indexing)
+List<String> evenPlaceStrings = list.stream()
+  .filter((String s, int index) -> index % 2 == 0)
+  .collect(Collectors.toList());
+
+System.out.println(evenPlaceStrings); // Output: [ppk, jagadheesh]

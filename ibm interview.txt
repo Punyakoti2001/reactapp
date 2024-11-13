@@ -1,0 +1,65 @@
+class Employee
+{
+private Long empId;
+private String firstName;
+private String lastName;
+}
+
+main()
+{
+List<Employee> empList = new ArrayList<>();
+Employee emp1 = new Employee(1L,"punykoti","reddy");
+Employee emp2 = new Employee(2L,"Anil","Kumar");
+empList.add(emp1);
+empList.add(emp2);
+
+Collections.sort(empList,(o1,o2)->{
+
+if((o1.getFirstName()).compare(o2.getFirstName() == 0)
+{
+return (o1.getEmpId()).compare(o2.getEmpId());
+}
+return (o1.getFirstName()).compare(o2.getFirstName());
+});
+
+}
+
+
+Test
+=====
+
+Class EmployeeTest
+{
+
+List<Employee> empList = new ArrayList<>();
+Employee emp1 ;
+Employee emp2;
+
+@AutoWired
+EmployeeService empService;
+
+@BeforeEach
+void setUp()
+{
+emp1 = new Employee(1L,"punykoti","reddy");
+emp2 = new Employee(2L,"Anil","Kumar");
+empList.add(emp1);
+empList.add(emp2);
+}
+
+@Test
+void testSortedList()
+{
+List<Employee> expectedList = new ArrayList<>()
+
+Employee emp1 = new Employee(1L,"punykoti","reddy");
+Employee emp2 = new Employee(2L,"Anil","Kumar");
+
+expectedList.add(emp2);
+expectedList.add(emp1);
+
+List<Employee> sortedList = emplService.getSortedList(empList);
+assertThat(sortedList).isEqualTo(expectedList);
+
+}
+

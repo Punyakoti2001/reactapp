@@ -1,0 +1,72 @@
+import React, { useContext, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import signUpService from '../Services/SignUpService';
+import { toast } from 'react-toastify';
+import { NavLink, useNavigate } from 'react-router-dom';
+import UserContext from '..';
+
+export default function SignUp() {
+    const { register, handleSubmit, formState: { isValid, errors } } = useForm({
+        mode: "onChange"
+    });
+    const [editFunction, setEditFunction] = useState(false);
+    const [formData, setFormData] = useState(null);
+    const { editUser } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (editUser) {
+            setEditFunction(true);
+            // Populate form data with existing user details for editing
+            setFormData(editUser);
+        }
+    }, [editUser]);
+
+    const onSubmit = async (data) => {
+        setFormData(data);
+
+        await signUpService(data)
+            .then(resp => {
+                console.log(resp.status);
+                if (resp.status >= 200 && resp.status < 300) {
+                    toast.success("Successfully Created", 3000)
+                    navigate("/login")
+                }
+            })
+            .catch(err => {
+                if (err.response.status === 409) {
+                    toast.warning("Email Already Exist", 3000)
+                } else if (err.response.status === 404) {
+                    toast.error("Role ID Does Not Exist", 3000)
+                }
+            });
+    };
+
+    return (
+        <div className='mt-5 d-flex justify-content-center mt-5' style={{backgroundImage:"URL('')"}}>
+            <div className='h-75 w-75 mt-5 border shadow-lg'>
+               {editFunction ? <h2 className='mt-4 text-center my-3'>Update</h2> : <h2 className='mt-4 text-center my-3'>ZettaMine SignUp</h2>} 
+                <div className='card-body d-flex justify-content-center'>
+                    <form onSubmit={handleSubmit(onSubmit)} className='mt-2'>
+                        <table>
+                            <tbody >
+                                <tr>
+                                    <td><label htmlFor='firstName'>First Name:</label></td>
+                                    <td><input type='text' value={formData ? formData.firstName : ''} className='form-control mb-1' placeholder={errors.firstName && errors.firstName.message} {...register("firstName", { required: "First Name is Required" })} />
+                                    </td>
+                                    {/* {errors.firstName && toast.error(errors.firstName.message)} */}
+                                </tr>
+                                {/* Other form fields... */}
+                            </tbody>
+                        </table>
+                    
+                        <div className='d-flex justify-content-center mb-4 mt-3'>
+                            <input className='btn btn-primary align-content-center' type='submit' value={editFunction ? "Update" : "Sign Up"} disabled={!isValid} />
+                        </div>
+                    </form>
+                </div>
+                <div className='d-flex justify-content-center my-2'>Already a member ?<NavLink className="text-decoration-none mx-2" to={"/login"}>login</NavLink></div>
+            </div>
+        </div>
+    );
+}

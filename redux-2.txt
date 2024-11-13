@@ -1,0 +1,207 @@
+Project - redux-app
+
+cmd> npm install
+
+Add the Redux Toolkit and React Redux packages to your project:
+
+cmd> npm install react-redux@8
+cmd> npm install @reduxjs/toolkit
+	OR
+
+cmd> npm install @reduxjs/toolkit react-redux
+
+cmd> npm start
+
+understand useTitle - custom hook
+
+---- Project Structure ---- 
+
+2) create a new folder with name "store" inside /src
+src/store  which contains 2 files - slice & store
+
+slice is something that is going to store the initial state - something which we are going to define all our action that if you want to perform add , if you want to perform remove - everything will be defined in slice
+
+store file - file to register the slice
+
+- there will be multiple slice and a single store
+
+Example:
+- informations related to Cart List - src/store/cartSlice.js
+- informations related to Address/ Location - src/store/locationSlice.js
+- store.js - main configuration is going to work here - import all contents here and then configure it here - configuration store which will be passed to all the components
+
+Redux is a pattern and library for managing and updating application state, using events called "actions".
+
+--- some jargons ----
+
+Slice: A "slice" is a collection of Redux reducer logic and actions for a single feature in your app, typically defined together in a single file. The name comes from splitting up the root Redux state object into multiple slice of data
+
+Action: An action is a plain Javascript object that has a type field. You can think of an action as an event that describes something that happened in the application. An action object can have other fields with additional information about what happened. By convention, we put that information in a field called payload
+
+useSelector: hook that lets our component extract whatever pieces of data it needs from the Redux store state
+
+useDispatch - hook that returns a reference to the dispatch function from the Redux store. You may use it to dispatch actions as needed
+
+The <Provider> component makes the Redux store available to any nested components that need to access the Redux Store
+
+
+===== Slice && Action ==== 92
+
+createSlice
+
+---- src/store/cartSlice.js ----
+
+import { createSlice} from '@reduxjs/toolkit'
+
+const cartSlice = createSlice({
+    name: 'cart',
+
+    initialState: {
+        cartList: [],
+        total: 0
+    },
+
+    reducers: {
+        add(state, action){
+            console.log(action.payload);
+        },
+        remove(){
+
+        }
+    }
+})
+export const {add, remove} = cartSlice.actions;
+export const cartReducer = cartSlice.reducer;
+
+
+---- src/store/store.js ----  
+
+
+import { configureStore } from "@reduxjs/toolkit";
+import { cartReducer } from "./cartSlice";
+
+export const store = configureStore({
+    reducer: {
+        cartState: cartReducer,
+    }
+});
+
+
+-- how our app is going to know that something like store is defined and is done by using <Provider> in index.js 
+
+--- index.js ---
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router } from "react-router-dom";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
+
+import './index.css';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>    
+  </React.StrictMode>
+);
+
+
+----- Reducers: Add & Remove ----- 93
+
+components/ProductCard.js
+
+import { add } from "../store/cartSlice"
+
+<button onClick={() => add(product)}>Add To Cart</button>
+- refresh browser - click on "Add To Cart" - wont be working
+
+import { useDispatch } from "react-redux";
+const dispatch =  useDispatch();
+
+<button onClick={() => dispatch(add(product))}>Add To Cart</button>
+
+-- run the app and check in Dev Tool
+
+
+===== next part =====
+
+-- to access cartList or to access the total inside the Cart Page  -- using useSelector hook of react-redux
+
+pages/Cart.js
+
+import { useSelector } from "react-redux";
+import { useTitle } from "../hooks/useTitle";
+import { CartCard } from "../components";
+
+export const Cart = () => {
+  useTitle("Cart");
+  const products = useSelector(state => state.cartState.cartList);
+  const total = useSelector(state => state.cartState.total);
+  
+  return (
+    <main>
+      <section className="cart">
+        <h1>Cart Items: {products.length} / ${total}</h1>
+        { products.map((product) => (
+          <CartCard key={product.id} product={product} />
+        )) }        
+      </section>
+    </main>
+  )
+}
+
+components/CartCard.js
+
+import { useDispatch } from "react-redux";
+import { remove } from "../store/cartSlice";
+import "./CartCard.css";
+
+export const CartCard = ({product}) => {
+  const dispatch = useDispatch();
+  const {name, price, image} = product;
+
+  return (
+      <div className="cartCard">
+        <img src={image} alt={name} />
+        <p className="productName">{name}</p>
+        <p className="productPrice">${price}</p>
+        <button onClick={() => dispatch(remove(product))}>Remove</button>
+      </div>
+  )
+}
+
+
+-- Redux Store State ---- 94
+
+Header.js
+
+import { useSelector } from "react-redux";
+import { Link, NavLink } from "react-router-dom"; 
+import Logo from "../assets/logo.png"
+import "./Header.css";
+
+export const Header = () => {
+  const cartList = useSelector(state => state.cartState.cartList);
+
+  return (
+    <header>
+      <Link to="/" className="logo">
+        <img src={Logo} alt="Shopmate Logo" />
+        <span>REDUX CART</span>
+      </Link>
+      <nav className="navigation">
+        <NavLink to="/" className="link" end>Home</NavLink>
+        <NavLink to="/cart" className="link">Cart</NavLink>
+      </nav>
+      <Link to="/cart" className="items">
+        <span>Cart: {cartList.length}</span>
+      </Link>
+    </header>
+  )
+}

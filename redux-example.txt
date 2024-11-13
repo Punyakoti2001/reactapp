@@ -1,0 +1,90 @@
+// store.js
+import { createStore } from 'redux';
+import counterReducer from './reducers/counterReducer';
+
+const store = createStore(counterReducer);
+
+export default store;
+
+
+
+// reducers/counterReducer.js
+const initialState = {
+  count: 0
+};
+
+const counterReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'INCREMENT':
+      return {
+        ...state,
+        count: state.count + 1
+      };
+    case 'DECREMENT':
+      return {
+        ...state,
+        count: state.count - 1
+      };
+    case 'RESET':
+      return {
+        ...state,
+        count: 0
+      };
+    default:
+      return state;
+  }
+};
+
+export default counterReducer;
+
+
+
+// actions/counterActions.js
+export const increment = () => ({
+  type: 'INCREMENT'
+});
+
+export const decrement = () => ({
+  type: 'DECREMENT'
+});
+
+export const reset = () => ({
+  type: 'RESET'
+});
+
+
+// App.js
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { increment, decrement, reset } from './actions/counterActions';
+
+const App = () => {
+  const count = useSelector(state => state.count);
+  const dispatch = useDispatch();
+
+  return (
+    <div>
+      <h1>Counter: {count}</h1>
+      <button onClick={() => dispatch(increment())}>Increment</button>
+      <button onClick={() => dispatch(decrement())}>Decrement</button>
+      <button onClick={() => dispatch(reset())}>Reset</button>
+    </div>
+  );
+};
+
+export default App;
+
+
+// index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import store from './store';
+import App from './App';
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);

@@ -1,0 +1,97 @@
+useContext
+useReducer
+redux thunk
+Jest - unit testing
+
+
+passay maven dependency
+
+Login Module
+
+backend applicatiion - zetta-backend
+
+UserController
+
+POST -- 
+{
+  email
+  firstName
+  lastName
+  roleId - 
+}			temporaryPassword using passay dependency
+
+roleId - 1 - Admin
+roleId - 2 - HR
+roleId - 3 - Internal Employee
+roleId - 4 - External Employee
+
+Entity class
+	private String firstName;
+	private String password;
+	private String tempPwd;
+	private String lastName;
+	private int roleId;
+	private Integer loginStatus;	0 , 1
+	private boolean accountLock;
+	private Integer attempts;
+
+
+	public static String generatePassayPassword() {
+
+		PasswordGenerator gen = new PasswordGenerator();
+		CharacterData lowerCaseChars = EnglishCharacterData.LowerCase;
+		CharacterRule lowerCaseRule = new CharacterRule(lowerCaseChars);
+		lowerCaseRule.setNumberOfCharacters(2);
+
+		CharacterData upperCaseChars = EnglishCharacterData.UpperCase;
+		CharacterRule upperCaseRule = new CharacterRule(upperCaseChars);
+		upperCaseRule.setNumberOfCharacters(2);
+
+		CharacterData digitChars = EnglishCharacterData.Digit;
+		CharacterRule digitRule = new CharacterRule(digitChars);
+		digitRule.setNumberOfCharacters(2);
+
+		CharacterData specialChars = new CharacterData() {
+			public String getErrorCode() {
+				return "cannot generate special characters";
+			}
+
+			public String getCharacters() {
+				return "!@#$%^&*()_+";
+			}
+		};
+		CharacterRule splCharRule = new CharacterRule(specialChars);
+		splCharRule.setNumberOfCharacters(2);
+
+		String password = gen.generatePassword(10, splCharRule, lowerCaseRule, upperCaseRule, digitRule);
+
+		return password;
+	}
+
+
+
+email format
+
+Welcome, Sunil Joseph!
+
+Hello, Sunil Joseph!
+
+Thank you for joining us! We're excited to have you on board.
+
+Your are appointed as an Administrator!
+
+Please find your user credentials and change your password upon loggin into the system:
+
+Login Link: Login Link!
+
+Email ID: sunilozhakal@hotmail.com
+
+One-Time Password: NiU#O8LxW
+
+Best regards
+Team @ Zettamine
+----------------------------------------------------------
+
+http://localhost:3000
+
+

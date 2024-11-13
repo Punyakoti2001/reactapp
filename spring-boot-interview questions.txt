@@ -1,0 +1,22 @@
+what are the key dependencies of the spring boot?
+  >spring-boot-starter-parent,
+    spring-boot-maven-plugin,
+    spring-boot-starter-test,
+    spring-boot-starter-security,
+    spring-boot-starter-actuator,
+    spring-boot-starter-web
+
+
+2) Spring Vs Spring Boot?s
+      > Spring is a framework that provides various modules for
+       building enterprise-level applications.
+
+      > Spring Boot is a framework that simplifies Spring development 
+        by providing a pre-configured environment that enables 
+        developers to focus on building the application logic.
+
+3)What is a Spring Boot Interceptor?
+  An interceptor is a piece of code that executes before an action. 
+  ->Before sending a request to the controller(preHandle())
+  ->Before sending a response to the client(PostHandle())
+  ->After sending the response to the client(afterConpletion()).

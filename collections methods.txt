@@ -1,0 +1,10 @@
+Collections.min(list);
+
+Collections.max();
+
+Collections.rotate(list,-2)
+
+Collections.frequency(list,1);
+
+
+
